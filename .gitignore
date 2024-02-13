@@ -1,0 +1,3 @@
+json-gen-venv/**
+**/__pycache__/**
+.vscode/**
