@@ -1,3 +1,20 @@
+# Copyright 2024 Google
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from dis import Instruction
+
+
 class JsonGenPrompts:
     def __init__(self, product_name: str, product_description:str, language:str="english") -> None:
         self.product_name = product_name
@@ -20,6 +37,41 @@ class JsonGenPrompts:
                 5. Use {self.language} language for both metaDescription and pageTitle.
                 """
     
+    @property
+    def pure_gen_instruction(self) -> str:
+        return """
+                Your task is to generate text fields named 'pageTitle' and 'metaDescription'. Write the 'pageTitle' and 'metaDescription' to promote visits and traffic to an online shop. 
+
+                Use the *Product_Name* and *Product_Description* below to create 'pageTitle' and 'metaDescription'. 
+
+                ###Data to use###
+
+                The *Product_Name* is: {self.product_name}
+                The *Product_Description* is: {self.product_description}
+
+                ###Guideline to follow###
+
+                When creating 'metaDescription':  
+                * Write 'metaDescription' in an active voice. 
+                * Craft a compelling 'metaDescription' that summarizes the *Product_Description* to encourage clicks.
+                * Keep 'metaDescription' concise, between 1 to 4 sentences.
+
+                When creating the 'pageTitle': 
+                * Keep the 'pageTitle' concise, between 1 to 2 sentences.
+                * Write a clear and descriptive 'pageTitle' that include main keywords from *Product_Name* and *Product_Description*
+                """
+
+    def grammar_correction(self, generated_title_and_description:str) -> str:
+        return """
+                #### SYSTEM INSTRUCTIONS ####
+                You are an english professor who will fix the grammar for the text in 'pageTitle' and 'metaDescription' fields below:
+
+                #### 'pageTitle' and 'metaDesciption' to correct: ####
+                {generated_title_and_description}
+
+                Corrected 'pageTitle' and 'metaDescription' as dictionary:
+                """
+
     @property
     def multi_shot_examples(self) -> str:
         return """Product Name and Product Description: Product Name: Alisha Solid Women's Cycling Shorts
