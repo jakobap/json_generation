@@ -24,7 +24,7 @@ class json_extract_functions:
     def get_title_and_description(self):
         return generative_models.FunctionDeclaration(
             name="get_title_and_description",
-            description="Extract the page title and meta description from.",
+            description="Extract the pageTitle and metaDescription from the provided text.",
             parameters={
                 "type": "object",
                 "properties": {

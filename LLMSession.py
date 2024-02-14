@@ -52,8 +52,10 @@ class LLMSession:
                 generation_config=parameters,
                 stream=False
             )
-
-            response = {"text": responses.text}
+            try:
+                response = {"text": responses.text}
+            except:
+                raise ValueError("Empty Gemini Response")
         else:
             model = TextGenerationModel.from_pretrained(self.model_name)
             response = model.predict(prompt_str, **parameters)

@@ -62,7 +62,7 @@ class JsonGenPrompts:
                 """
 
     def grammar_correction(self, generated_title_and_description:str) -> str:
-        return """
+        return f"""
                 #### SYSTEM INSTRUCTIONS ####
                 You are an english professor who will fix the grammar for the text in 'pageTitle' and 'metaDescription' fields below:
 

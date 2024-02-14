@@ -69,7 +69,7 @@ if __name__ == "__main__":
     
     correction_prompt = prompts.grammar_correction(generated_title_and_description=text_response['text'])
     correction_response = llm_palm.llm_prediction(prompt_str=correction_prompt, temperature=0.3)
-    
+
     fc_response = llm_gemini.llm_function_call(prompt_str=correction_response['text'])
     print(fc_response)
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     
     correction_prompt = prompts.grammar_correction(generated_title_and_description=text_response['text'])
     correction_response = llm_palm.llm_prediction(prompt_str=correction_prompt, temperature=0.3)
-    
+
     fc_response = llm_gemini.llm_function_call(prompt_str=correction_response['text'])
     print(fc_response)
 
