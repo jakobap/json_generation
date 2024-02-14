@@ -1,15 +1,28 @@
-def multi_shot_prompt(product_name, product_description, language="english"):
-    context = """This product data is for an online shop shown in search engines.
-    You will receive 'Product Name' and 'Product Description' delimited by angle brackets.
-    Your task is to generate a 'Meta Description' to improve the SEO ranking.
+class JsonGenPrompts:
+    def __init__(self, product_name: str, product_description:str, language:str="english") -> None:
+        self.product_name = product_name
+        self.product_description = product_description
+        self.language = language
 
-    1. The 'Meta Description' must be a JSON object with two fields: pageTitle, metaDescription.
-    2. Write metaDescription in an active voice.
-    3. Keep metaDescription concise, between 50 and 150 characters.
-    4. pageTitle must not exceed 100 characters.
-    5. Use {language} language for both metaDescription and pageTitle.""".format(language=language)
+    @property
+    def gen_and_extr_instruction(self) -> str:
+        return f"""
+                #### SYSTEM PROMPT ####
+                This product data is for an online shop shown in search engines.
+                You will receive 'Product Name' and 'Product Description' delimited by angle brackets.
+                Your task is to generate a 'Meta Description' to improve the SEO ranking.
 
-    multi_shot_examples = """Product Name and Product Description: Product Name: Alisha Solid Women's Cycling Shorts
+                #### INSTRUCTIONS ####
+                1. The 'Meta Description' must be a JSON object with two fields: pageTitle, metaDescription.
+                2. Write metaDescription in an active voice.
+                3. Keep metaDescription concise, between 50 and 150 characters.
+                4. pageTitle must not exceed 100 characters.
+                5. Use {self.language} language for both metaDescription and pageTitle.
+                """
+    
+    @property
+    def multi_shot_examples(self) -> str:
+        return """Product Name and Product Description: Product Name: Alisha Solid Women's Cycling Shorts
 
     Product Description: Key Features of Alisha Solid Women's Cycling Shorts Cotton Lycra Navy, Red, Navy,Specifications of Alisha Solid Women's Cycling Shorts Shorts Details Number of Contents in Sales Package Pack of 3 Fabric Cotton Lycra Type Cycling Shorts General Details Pattern Solid Ideal For Women's Fabric Care Gentle Machine Wash in Lukewarm Water, Do Not Bleach Additional Details Style Code ALTHT_3P_21 In the Box 3 shorts
     Meta Description: {
@@ -52,16 +65,19 @@ def multi_shot_prompt(product_name, product_description, language="english"):
     "metaDescription": "Add a touch of elegance to your desk with this crystal paperweight featuring Gandhi's bust and a timeless message."
     }"""
 
-    user_query = """
+    @property
+    def user_query(self) -> str:
+        return f"""
     Product Name and Product Description:
 
-    Product Name: {product_name}
+    Product Name: {self.product_name}
 
-    Product Description: {product_description}
+    Product Description: {self.product_description}
     Meta Description:
     """
 
-    return context + multi_shot_examples + user_query.format(product_name=product_name, product_description=product_description)
 
 if __name__ == "__main__":
-    print(multi_shot_prompt(product_name = "hello test product", product_description="hello test description"))
+    prompts = JsonGenPrompts(product_name = "hello test product", product_description="hello test description")
+    
+    print(prompts.gen_and_extr_instruction + prompts.multi_shot_examples + prompts.user_query)
